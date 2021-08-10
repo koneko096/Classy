@@ -1,5 +1,4 @@
-# Classy [![Build Status](https://travis-ci.org/koneko096/Classy.svg?branch=master)](https://travis-ci.org/koneko096/Classy)
- [ ![Download](https://api.bintray.com/packages/koneko096/maven/classy-core/images/download.svg) ](https://bintray.com/koneko096/maven/classy-core/_latestVersion)
+# Classy ![Build](https://github.com/koneko096/Classy/actions/workflows/BuildImage.yml/badge.svg) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=koneko096_Classy&metric=alert_status)](https://sonarcloud.io/dashboard?id=koneko096_Classy)
  
 Simple kNN and NaiveBayes classifier implementation
 
