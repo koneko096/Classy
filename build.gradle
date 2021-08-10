@@ -8,7 +8,6 @@
 
 plugins {
     id 'com.palantir.git-version' version '0.11.0'
-    id "com.jfrog.bintray" version "1.8.1"
     id "org.sonarqube" version "2.6"
     id "maven-publish"
 }
@@ -71,9 +70,6 @@ tasks.withType(Test) {
 
 // In this section you declare where to find the dependencies of your project
 repositories {
-    // Use 'jcenter' for resolving your dependencies.
-    // You can declare any Maven/Ivy/file repository here.
-    jcenter()
     mavenCentral()
 }
 
@@ -122,44 +118,14 @@ def pomConfig = {
 }
 
 publishing {
-    publications {
-        mavenPublication(MavenPublication) {
-            from components.java
-            artifact sourcesJar {
-                classifier "sources"
-            }
-            groupId 'id.koneko096'
-            artifactId 'classy-core'
-            version version
-            pom.withXml {
-                def root = asNode()
-                root.appendNode('description', 'Simple classifier')
-                root.appendNode('name', 'Classy')
-                root.appendNode('url', 'https://github.com/koneko096/Classy')
-                root.children().last() + pomConfig
-            }
-        }
+    repositories {
+    maven {
+      name = "GitHubPackages"
+      url = "https://maven.pkg.github.com/octocat/hello-world"
+      credentials {
+        username = System.getenv("GITHUB_ACTOR")
+        password = System.getenv("GITHUB_TOKEN")
+      }
     }
 }
-
-bintray {
-	user = System.getProperty('bintray.user')
-	key = System.getProperty('bintray.key')
-	publications = ['mavenPublication']
-
-	pkg {
-		repo = 'maven'
-		name = 'classy-core'
-		userOrg = 'koneko096'
-		licenses = ['Apache-2.0']
-		vcsUrl = 'https://github.com/koneko096/Classy.git'
-		version {
-			name = gitVersion()
-			desc = 'v${gitVersion()}'
-			released  = new Date()
-		}
-	}
-
-}
-
 
