@@ -29,3 +29,5 @@ jobs:
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
       - name: Build with Gradle
         run: ./gradlew test
+      - name: Sonar scan
+        run: ./gradlew sonarqube -Dsonar.projectKey=koneko096_Classy -Dsonar.organization=koneko096-github -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_KEY }}
