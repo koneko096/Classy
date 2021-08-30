@@ -145,5 +145,6 @@ sonarqube {
     property 'sonar.host.url', 'https://sonarcloud.io'
     property 'sonar.organization', 'koneko096-github'
     property 'sonar.projectKey', 'koneko096_Classy'
+    property 'sonar.exclusions', 'src/main/java/id/koneko096/Classy/Data/**/*,src/main/java/id/koneko096/Classy/Util/**/*'
   }
 }
