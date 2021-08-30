@@ -83,11 +83,12 @@ dependencies {
     compile 'ch.qos.logback:logback-classic:1.2.3'
     compile 'org.projectlombok:lombok:1.18.20'
 
-    // Declare the dependency for your favourite test framework you want to use in your tests.
-    // TestNG is also supported by the Gradle Test task. Just change the
-    // testCompile dependency to testCompile 'org.testng:testng:6.8.1' and add
-    // 'test.useTestNG()' to your build script.
-    testCompile 'junit:junit:4.12'
+    testCompile 'org.junit.jupiter:junit-jupiter:5.7.0'
+    testCompile 'org.mockito:mockito-junit-jupiter:2.19.0'
+}
+
+test {
+    useJUnitPlatform()
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
