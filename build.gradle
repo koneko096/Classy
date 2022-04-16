@@ -10,9 +10,10 @@ plugins {
     id 'jacoco'
     id 'java'
     id 'maven-publish'
+    id 'io.freefair.lombok' version '4.1.6'
     id 'org.sonarqube' version '2.8'
     id 'com.palantir.git-version' version '0.12.3'
-    id 'com.usaa.sonar-quality-gates' version '2.0.0'
+    id 'com.diffplug.spotless' version '6.4.2'
 }
 
 // Apply the java plugin to add support for Java
@@ -81,7 +82,6 @@ dependencies {
     // The production code uses the SLF4J logging API at compile time
     compile 'org.slf4j:slf4j-api:1.7.25'
     compile 'ch.qos.logback:logback-classic:1.2.3'
-    compile 'org.projectlombok:lombok:1.18.20'
 
     testCompile 'org.junit.jupiter:junit-jupiter:5.7.0'
     testCompile 'org.mockito:mockito-junit-jupiter:2.19.0'
@@ -144,6 +144,19 @@ publishing {
     }
 }
 
+spotless {
+    // optional: limit format enforcement to just the files changed by this feature branch
+    ratchetFrom 'origin/master'
+
+    java {
+        removeUnusedImports()
+        importOrder()
+        googleJavaFormat('1.7').reflowLongStrings()
+        prettier()
+    }
+
+
+}
 
 sonarqube {
   properties {

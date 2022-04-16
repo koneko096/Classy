@@ -1,0 +1,44 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Build and test
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events
+  push:
+    branches: [ master ]
+ 
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+
+jobs:
+  build:
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          java: [ 8, 11 ]
+
+      steps:
+      # Check out the repo
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'adopt'
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            ~/.cache/selenium
+          key: ${{ runner.os }}-gradle-${{ matrix.java }}-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-${{ matrix.java }}-
+            ${{ runner.os }}-gradle-
+      - name: Linter
+        run: ./gradlew check
+      - name: Build and analyze
+        run: ./gradlew test jacocoTestReport
