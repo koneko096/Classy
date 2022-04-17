@@ -23,16 +23,6 @@ version gitVersion()
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-jar {
-    manifest {
-        attributes 'Implementation-Title': 'classy-core',
-                   'Implementation-Version': project.version
-    }
-    from {
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-}
-
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 
@@ -96,10 +86,6 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
 }
 
-artifacts {
-    archives sourcesJar
-}
-
 jacoco {
     toolVersion = "0.8.4"
 }
@@ -110,32 +96,55 @@ jacocoTestReport {
   }
 }
 
-def pomConfig = {
-    licenses {
-        license {
-            name "The Apache Software License, Version 2.0"
-            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
-            distribution "repo"
-        }
-    }
-    developers {
-        developer {
-            id "koneko096"
-            name "Afrizal Fikri"
-            email "afrizalf96@gmail.com"
-        }
-    }
-
-    scm {
-        url "https://github.com/koneko096/Classy"
-    }
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
 publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'id.koneko096'
+            artifactId = 'classy-core'
+            version = project.version
+            from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                name = 'Classy'
+                description = 'Simple kNN and NaiveBayes classifier implementation'
+                licenses {
+                    license {
+                        name = "The Apache Software License, Version 2.0"
+                        url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                        distribution = "repo"
+                    }
+                }
+                developers {
+                    developer {
+                        id = "koneko096"
+                        name = "Afrizal Fikri"
+                        email = "afrizalf96@gmail.com"
+                    }
+                }
+                scm {
+                    connection = "scm:git:git://github.com/koneko096/Classy.git"
+                    developerConnection = "scm:git:ssh://github.com/koneko096/Classy.git"
+                    url = "https://github.com/koneko096/Classy"
+                }
+            }
+        }
+    }
     repositories {
         maven {
             name = "GitHubPackages"
-            url = "https://maven.pkg.github.com/octocat/hello-world"
+            url = "https://maven.pkg.github.com/koneko096/Classy"
             credentials {
                 username = System.getenv("GITHUB_ACTOR")
                 password = System.getenv("GITHUB_TOKEN")
@@ -154,8 +163,6 @@ spotless {
         googleJavaFormat('1.7').reflowLongStrings()
         prettier()
     }
-
-
 }
 
 sonarqube {
