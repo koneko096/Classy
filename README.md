@@ -1,4 +1,4 @@
-# Classy ![Build](https://github.com/koneko096/Classy/actions/workflows/Build.yml/badge.svg) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=koneko096_Classy&metric=alert_status)](https://sonarcloud.io/dashboard?id=koneko096_Classy)
+# Classy ![Build](https://github.com/koneko096/Classy/actions/workflows/build.yml/badge.svg) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=koneko096_Classy&metric=alert_status)](https://sonarcloud.io/dashboard?id=koneko096_Classy)
  
 Simple kNN and NaiveBayes classifier implementation
 
