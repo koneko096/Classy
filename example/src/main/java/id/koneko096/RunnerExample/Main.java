@@ -2,11 +2,11 @@ package id.koneko096.RunnerExample;
 
 import java.util.*;
 
-import id.koneko096.Classy.Classifier.*;
-import id.koneko096.Classy.Data.*;
-import id.koneko096.Classy.Loader.*;
-import id.koneko096.Classy.Loader.IO.FileInputReaderFactory;
-import id.koneko096.Classy.Runner.*;
+import id.koneko096.classy.classifier.*;
+import id.koneko096.classy.data.*;
+import id.koneko096.classy.loader.*;
+import id.koneko096.classy.loader.IO.FileInputReaderFactory;
+import id.koneko096.classy.runner.*;
 
 import java.io.PrintStream;
 
