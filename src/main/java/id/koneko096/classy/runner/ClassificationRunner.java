@@ -9,7 +9,6 @@ import id.koneko096.classy.util.DelayedFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -21,11 +20,10 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Builder
-@AllArgsConstructor
 @Getter
 public class ClassificationRunner {
   private BaseClassifier classifier;
-  private List<BaseTransformer> transformers;
+  @Builder.Default private List<BaseTransformer> transformers = java.util.Collections.emptyList();
 
   public void train(InstanceSet trainSet) {
     InstanceSet newTrainSet = trainSet;
@@ -33,7 +31,7 @@ public class ClassificationRunner {
       transformer.fit(newTrainSet);
       newTrainSet = transformer.transform(newTrainSet);
     }
-    this.classifier.train(trainSet);
+    this.classifier.train(newTrainSet);
   }
 
   public List<String> classify(InstanceSet testSet) {
@@ -63,7 +61,7 @@ public class ClassificationRunner {
             .boxed()
             .map(
                 i -> {
-                  this.classifier.train(trainSets.get(i));
+                  this.train(trainSets.get(i));
                   return classify(testSets.get(i));
                 })
             .collect(Collectors.toList());

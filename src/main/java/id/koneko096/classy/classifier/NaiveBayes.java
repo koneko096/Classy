@@ -1,6 +1,5 @@
 package id.koneko096.classy.classifier;
 
-import id.koneko096.classy.data.Attribute;
 import id.koneko096.classy.data.Instance;
 import id.koneko096.classy.data.InstanceSet;
 import java.util.AbstractMap;
@@ -73,7 +72,6 @@ public class NaiveBayes implements BaseClassifier {
                     }));
 
     // TODO: improve performance
-    List<String> attrNames = trainSet.getAttributeNames();
     grouped.entrySet().stream()
         .forEach(
             entry -> {
@@ -82,16 +80,13 @@ public class NaiveBayes implements BaseClassifier {
 
               instances.stream()
                   .forEach(
-                      instance ->
-                          IntStream.range(0, attrNames.size())
-                              .forEach(
-                                  id -> {
-                                    String attrName = attrNames.get(id);
-                                    Attribute attr = instance.get(attrName);
-                                    int attrIdx =
-                                        this.attrValIdx.get(id).get(attr.getValue().toString());
-                                    this.table[id][attrIdx][classId]++;
-                                  }));
+                      instance -> {
+                        double[] values = instance.values();
+                        for (int id = 0; id < values.length; id++) {
+                          int attrIdx = (int) values[id];
+                          this.table[id][attrIdx][classId]++;
+                        }
+                      });
 
               this.classCum[classId] += instances.size();
             });
@@ -131,23 +126,24 @@ public class NaiveBayes implements BaseClassifier {
 
   @Override
   public String classify(Instance instance) {
+    double[] values = instance.values();
     List<Map.Entry<Double, Integer>> x =
         IntStream.range(0, this.classProbs.length)
             .boxed()
             .map(
                 k -> {
-                  double classLikelihood =
+                  double likelihood =
                       IntStream.range(0, this.attrValIdx.size())
                           .boxed()
                           .map(
                               i -> {
-                                String attrName = (String) instance.getAttributeNames().get(i);
-                                String attrVal = instance.get(attrName).getValue().toString();
-                                int j = this.attrValIdx.get(i).get(attrVal);
+                                int j = (int) values[i];
                                 return this.attrLikelihood[i][j][k];
                               })
                           .reduce(1.0, (a, b) -> a * b);
-                  return new AbstractMap.SimpleEntry<>(-classLikelihood, k);
+
+                  double posterior = likelihood * this.classProbs[k];
+                  return new AbstractMap.SimpleEntry<>(-posterior, k);
                 })
             .sorted(Comparator.comparing(Map.Entry::getKey))
             .collect(Collectors.toList());

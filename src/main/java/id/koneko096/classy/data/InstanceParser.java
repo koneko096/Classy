@@ -22,16 +22,18 @@ public class InstanceParser {
               String label = attrs[attrs.length - 1];
               List<String> attrList = Arrays.asList(attrs).subList(0, attrs.length - 1);
 
-              List<Attribute> attributeList =
+              double[] values =
                   IntStream.range(0, attrList.size())
-                      .boxed()
-                      .map(
-                          i ->
-                              AttributeFactory.make(
-                                  attrTypes.get(i), attrList.get(i), attrNames.get(i)))
-                      .collect(Collectors.toList());
+                      .mapToDouble(
+                          i -> {
+                            String name = attrNames.get(i);
+                            List<String> candidates = header.getAttributeCandidates().get(name);
+                            return AttributeFactory.make(attrTypes.get(i), attrList.get(i), name)
+                                .obtainNumericValues(candidates);
+                          })
+                      .toArray();
 
-              return new Instance(attributeList, label);
+              return new Instance(values, label);
             })
         .collect(Collectors.toList());
   }

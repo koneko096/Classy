@@ -7,7 +7,13 @@ import id.koneko096.classy.data.Header;
 import id.koneko096.classy.data.Instance;
 import id.koneko096.classy.data.InstanceParser;
 import id.koneko096.classy.loader.IO.InputReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 

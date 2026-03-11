@@ -6,13 +6,20 @@ import id.koneko096.classy.data.Instance;
 import id.koneko096.classy.data.InstanceParser;
 import id.koneko096.classy.loader.IO.InputReader;
 import id.koneko096.classy.util.Constants;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
 public class CsvLoader implements BaseLoader {
+
+  private static final Logger log = LoggerFactory.getLogger(CsvLoader.class);
   private InputReader input;
 
   @Override

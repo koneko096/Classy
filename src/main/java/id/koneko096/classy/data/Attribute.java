@@ -14,28 +14,36 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class Attribute<T> {
-  private T value;
+  private Object value;
   private String name;
   private AttributeType type;
 
-  public Attribute(Attribute<T> attr) {
-    value = attr.value;
-    type = attr.type;
-    name = attr.name;
-  }
-
-  public static <T> List<Attribute<T>> ofMap(Map<String, T> map, AttributeType type) {
+  public static List<Attribute> ofMap(Map<String, Object> map, AttributeType type) {
     return map.entrySet().parallelStream()
-        .map(e -> new Attribute<>(e.getValue(), e.getKey(), type))
+        .map(e -> new Attribute(e.getValue(), e.getKey(), type))
         .collect(Collectors.toList());
   }
 
-  public double toDouble() {
-    String s = value.toString();
-    try {
-      return Double.parseDouble(s);
-    } catch (NumberFormatException e) {
-      return 0;
+  public double obtainNumericValues() {
+    return obtainNumericValues(null);
+  }
+
+  public double obtainNumericValues(List<String> candidates) {
+    if (type == AttributeType.NOMINAL && candidates != null) {
+      int index = candidates.indexOf(value.toString());
+      if (index != -1) {
+        return (double) index;
+      }
+    }
+
+    if (value instanceof Number) {
+      return ((Number) value).doubleValue();
+    } else {
+      try {
+        return Double.parseDouble(value.toString());
+      } catch (NumberFormatException e) {
+        return 0.0;
+      }
     }
   }
 }

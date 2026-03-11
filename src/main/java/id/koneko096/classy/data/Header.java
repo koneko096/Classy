@@ -23,7 +23,23 @@ public class Header {
     this.attributeNameSet = new HashSet<>(attributeNames);
   }
 
-  public void dropFields(List<String> fieldNames) {
+  public List<String> getAttributeNames() {
+    return attributeNames;
+  }
+
+  public Set<String> getAttributeNameSet() {
+    return attributeNameSet;
+  }
+
+  public Map<String, List<String>> getAttributeCandidates() {
+    return attributeCandidates;
+  }
+
+  public List<Class> getAttributeTypes() {
+    return attributeTypes;
+  }
+
+  public List<Integer> dropFields(List<String> fieldNames) {
     // Remove from set first
     attributeNameSet.removeAll(fieldNames);
 
@@ -48,5 +64,7 @@ public class Header {
     // Remove from type list
     attributeTypes =
         notDroppedIndexes.stream().map(attributeTypes::get).collect(Collectors.toList());
+
+    return notDroppedIndexes;
   }
 }

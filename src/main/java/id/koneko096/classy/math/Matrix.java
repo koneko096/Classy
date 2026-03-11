@@ -32,6 +32,14 @@ public class Matrix {
     }
   }
 
+  public double[][] getData() {
+    double[][] copy = new double[rows][cols];
+    for (int i = 0; i < rows; i++) {
+      System.arraycopy(this.data[i], 0, copy[i], 0, cols);
+    }
+    return copy;
+  }
+
   public Matrix(int rows, int cols) {
     if (rows <= 0 || cols <= 0) {
       throw new IllegalArgumentException("Matrix dimensions must be positive.");
@@ -138,7 +146,8 @@ public class Matrix {
     // Conceptually, (1xn) * (nxm) = (1xm)
     // This is equivalent to multiplying the transposed vector by the matrix,
     // or a row vector times a matrix.
-    // We can achieve this by creating a 1xN matrix from the vector and then performing matrix
+    // We can achieve this by creating a 1xN matrix from the vector and then
+    // performing matrix
     // multiplication,
     // or by directly calculating the result.
 

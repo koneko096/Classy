@@ -4,7 +4,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -14,13 +13,18 @@ import lombok.Getter;
  *
  * @author Afrizal Fikri
  */
-@AllArgsConstructor
 @Builder
 @EqualsAndHashCode
 public class InstanceSet implements List<Instance> {
-  private List<Instance> instanceList;
+  @Getter private List<Instance> instanceList;
   @Getter private Header header;
   @Getter private String name;
+
+  public InstanceSet(List<Instance> instanceList, Header header, String name) {
+    this.instanceList = instanceList;
+    this.header = header;
+    this.name = name;
+  }
 
   /**
    * Copy cnstructor
@@ -52,7 +56,6 @@ public class InstanceSet implements List<Instance> {
     List<InstanceSet> testSets =
         IntStream.range(0, fold)
             .boxed()
-            .map(groupedId::get)
             .map(
                 i ->
                     InstanceSet.builder()
@@ -84,7 +87,11 @@ public class InstanceSet implements List<Instance> {
     return new CrossSplit(trainSets, testSets);
   }
 
-  /** Drop fields inside aan instance set header and instances */
+  /**
+   * Drop fields inside an instance set header and instances
+   *
+   * @throws UndefinedFieldException when requested names don't exist
+   */
   public void dropFields(List<String> fieldNames) throws UndefinedFieldException {
     Optional<String> unpresentFields =
         fieldNames.stream().filter(f -> !this.header.getAttributeNameSet().contains(f)).findFirst();
@@ -94,20 +101,25 @@ public class InstanceSet implements List<Instance> {
           String.format("Field %s is undefined", unpresentFields.get()));
     }
 
-    this.header.dropFields(fieldNames);
-    this.instanceList.forEach(i -> i.dropAttributes(fieldNames));
+    List<Integer> keptIndices = this.header.dropFields(fieldNames);
+    this.instanceList.forEach(i -> i.updateValues(keptIndices));
   }
 
   public List<String> getAttributeNames() {
-    return header.getAttributeNames();
+    return header == null ? null : header.getAttributeNames();
   }
 
   public Map<String, List<String>> getAttributeCandidates() {
-    return header.getAttributeCandidates();
+    return header == null ? null : header.getAttributeCandidates();
   }
 
   public List<Class> getAttributeTypes() {
-    return header.getAttributeTypes();
+    return header == null ? null : header.getAttributeTypes();
+  }
+
+  public Double getValue(Instance inst, String attrName) {
+    int index = header.getAttributeNames().indexOf(attrName);
+    return inst.values()[index];
   }
 
   @Override
